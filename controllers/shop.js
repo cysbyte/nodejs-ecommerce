@@ -23,7 +23,7 @@ exports.getProduct = (req, res, next) => {
   //       path: '/products'
   //     });
   //   });
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then((product) => {
       console.log(product)
       res.render('shop/product-detail', {
