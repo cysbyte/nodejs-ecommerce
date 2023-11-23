@@ -15,21 +15,59 @@ class User {
     }
 
     addToCart(product) {
-        // const cartProduct = this.cart.items.findIndex(cp => {
-        //     return cp._id === product._id;
-        // })
-        const updatedCart = { items: [{ ...product, quantiry: 1 }] };
+        const cartProductIndx = this.cart.items.findIndex(cp => {
+            return cp.productId.toString() === product._id.toString();
+        })
+        let newQuantity = 1;
+        const updatedCartItems = [...this.cart.items];
+        
+        if (cartProductIndx >= 0) {
+            newQuantity = this.cart.items[cartProductIndx].quantity + 1;
+            updatedCartItems[cartProductIndx].quantity = newQuantity;
+        } else {
+            updatedCartItems.push({ productId: new mongodb.ObjectId(product._id), quantity: newQuantity });
+        }
+
+        const updatedCart = {
+            items: updatedCartItems
+        };
         const db = getDb();
-        return db.collection('users').updatedOne(
+        return db.collection('users').updateOne(
             { _id: new mongodb.ObjectId(this._id) },
             { $set: {cart: updatedCart}}
         );
     }
 
+    getCart() {
+        const db = getDb();
+        const productIds = this.cart.items.map(i => {
+            return i.productId;
+        });
+        return db
+            .collection('products')
+            .find({ _id: { $in: productIds } })
+            .toArray()
+            .then(products => {
+                return products.map(p => {
+                    return {
+                        ...p,
+                        quantity: this.cart.items.find(i => {
+                            return i.productId.toString() === p._id.toString();
+                        }).quantity
+                    }
+                });
+            });
+    }
+
     static findById(userId) {
         const db = getDb();
-        return db.collection('users').
-            findOne({ _id: new mongodb.ObjectId(userId) });
+        return db.collection('users')
+            .findOne({ _id: new mongodb.ObjectId(userId) })
+            .then((user) => {
+                console.log(user);
+                return user;
+            })
+            .catch(err => console.log(err));
     }
 }
 
