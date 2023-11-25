@@ -81,12 +81,11 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  console.log('req.user'+req.user.cart.items);
   req.user
     .populate('cart.items.productId')
     .then(user => {
       const products = user.cart.items.map(i => {
-        return { quantity: i.quantity, product: i.productId };
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
       const order = new Order({
         user: {
