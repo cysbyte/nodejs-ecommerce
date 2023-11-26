@@ -14,7 +14,7 @@ const MONGODB_URI = 'mongodb+srv://cys:33uk84mSjsMbH1tg@cluster0.ityud6p.mongodb
 const app = express();
 const store = new MongoDBStore({
   uri: MONGODB_URI,
-  collection: 'session'
+  collection: 'sessions'
 });
 
 app.set('view engine', 'ejs');
@@ -26,12 +26,14 @@ const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-  secret: 'my secret',
-  resave: false,
-  saveUninitialized: false,
-  store: store
-}));
+app.use(
+  session({
+    secret: 'my secret',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  })
+);
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -54,20 +56,8 @@ app.use(errorController.get404);
 mongoose
   .connect(MONGODB_URI)
   .then(result => {
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: 'Max',
-          email: 'max@test.com',
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    });
     app.listen(3000);
-    console.log('connected!')
+    console.log('connected!');
   })
   .catch(err => {
     console.log(err);
