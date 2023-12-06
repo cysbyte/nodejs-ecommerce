@@ -10,12 +10,14 @@ const flash = require('connect-flash');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
-
-const MONGODB_URI = 'mongodb+srv://cys:33uk84mSjsMbH1tg@cluster0.ityud6p.mongodb.net/shop?retryWrites=true&w=majority';
+const { appConfig } = require('./util/config');
 
 const app = express();
+const { mongodbUri } = appConfig;
+console.log(mongodbUri);
+
 const store = new MongoDBStore({
-  uri: MONGODB_URI,
+  uri: mongodbUri,
   collection: 'sessions'
 });
 const csrfProtection = csrf();
@@ -84,7 +86,7 @@ app.use((error, req, res, next) => {
 })
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(mongodbUri)
   .then(result => {
     app.listen(3000);
     console.log('connected!');
