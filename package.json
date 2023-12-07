@@ -30,6 +30,8 @@
     "nodemailer": "^4.7.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "pug": "^2.0.3",
-    "sequelize": "^5.0.0-beta.11"
+    "sequelize": "^5.0.0-beta.11",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   }
 }

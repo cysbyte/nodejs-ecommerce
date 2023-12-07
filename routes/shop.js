@@ -7,6 +7,31 @@ const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags: 
+ *   name: Products
+ *   description: API endpoints to manage products
+ */
+
+/**
+ * @swagger
+ *   /products:
+ *     get:
+ *       summary: Get all products
+ *       tags: [Products]
+ *       responses:
+ *         "200":
+ *           description: The list of all products
+ *           contents:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/Product'
+ *         "400":
+ *           $ref: '#/components/responses/400'
+ *         "401":
+ *           $ref: '#/components/responses/401'
+ */
 router.get('/', shopController.getIndex);
 
 router.get('/products', shopController.getProducts);

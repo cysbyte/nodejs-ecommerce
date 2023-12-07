@@ -14,8 +14,9 @@ const { appConfig } = require('./util/config');
 
 const app = express();
 const { mongodbUri } = appConfig;
-console.log(mongodbUri);
+const swagger = require('./swagger');
 
+swagger(app);
 const store = new MongoDBStore({
   uri: mongodbUri,
   collection: 'sessions'
